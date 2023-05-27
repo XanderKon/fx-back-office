@@ -2,6 +2,7 @@ docker/.env
 docker/.data
 .data
 .idea
+.cache
 .composer
 
 ###> symfony/framework-bundle ###
@@ -23,3 +24,8 @@ docker/.data
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+
+###> friendsofphp/php-cs-fixer ###
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+###< friendsofphp/php-cs-fixer ###
