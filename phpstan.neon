@@ -5,3 +5,4 @@ parameters:
         - tests
     symfony:
         consoleApplicationLoader: tests/console-application.php
+    checkGenericClassInNonGenericObjectType: false
