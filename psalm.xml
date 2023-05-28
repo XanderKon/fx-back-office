@@ -23,4 +23,12 @@
             <containerXml>var/cache/dev/App_KernelDevDebugContainer.xml</containerXml>
         </pluginClass>
     </plugins>
+    <issueHandlers>
+        <!-- https://github.com/vimeo/psalm/issues/4241 For some reasons it doesn't work -->
+        <PropertyNotSetInConstructor>
+            <errorLevel type="suppress">
+                <referencedProperty name="App\Service\Import\Providers\Traits\HasHttpClient::$httpClient" />
+            </errorLevel>
+        </PropertyNotSetInConstructor>
+    </issueHandlers>
 </psalm>
