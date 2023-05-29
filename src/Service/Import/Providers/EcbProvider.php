@@ -69,7 +69,12 @@ final class EcbProvider implements ProviderInterface
             ];
         }
 
-        $dto = $this->serializer->deserialize((string) json_encode($response), RatesDTO::class, 'json');
+        return $this->createDTO((string) json_encode($response));
+    }
+
+    private function createDTO(string $response): RatesDTO
+    {
+        $dto = $this->serializer->deserialize($response, RatesDTO::class, 'json');
         $violations = $this->validator->validate($dto);
 
         if (0 !== count($violations)) {
