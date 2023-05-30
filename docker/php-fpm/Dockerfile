@@ -78,7 +78,7 @@ RUN apt-get -y update \
 
 
 # Install some php extensions
-RUN docker-php-ext-install pdo pgsql pdo_pgsql zip pcntl bcmath
+RUN docker-php-ext-install pdo pgsql pdo_pgsql zip pcntl bcmath opcache
 
 ###########################################################################
 # xDebug:
