@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Source
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: "IDENTITY")]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column]
     private readonly int $id;
 
