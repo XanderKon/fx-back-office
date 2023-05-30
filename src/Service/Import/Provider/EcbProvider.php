@@ -4,16 +4,15 @@ namespace App\Service\Import\Provider;
 
 use App\Service\DTO\RatesDTO;
 use App\Service\Import\Exception\BadXMLResponseException;
-use App\Service\Import\Exception\DTOValidationException;
 use App\Service\Import\Exception\ParseResponseFromProviderException;
 use App\Service\Import\Exception\WrongStatusCodeFromProviderException;
 use App\Service\Import\Provider\Trait\HasHttpClient;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use App\Service\Import\Provider\Trait\HasParserToDTO;
 
 final class EcbProvider implements ProviderInterface
 {
     use HasHttpClient;
+    use HasParserToDTO;
 
     private const PROVIDER_NAME = 'ecb';
 
@@ -21,10 +20,8 @@ final class EcbProvider implements ProviderInterface
 
     private string $response = '';
 
-    public function __construct(
-        private readonly SerializerInterface $serializer,
-        private readonly ValidatorInterface $validator,
-    ) {
+    public function __construct()
+    {
     }
 
     public function getProviderName(): string
@@ -70,21 +67,5 @@ final class EcbProvider implements ProviderInterface
         }
 
         return $this->createDTO((string) json_encode($response));
-    }
-
-    private function createDTO(string $response): RatesDTO
-    {
-        $dto = $this->serializer->deserialize($response, RatesDTO::class, 'json');
-        $violations = $this->validator->validate($dto);
-
-        if (0 !== count($violations)) {
-            $messages = [];
-            foreach ($violations as $error) {
-                $messages[$error->getPropertyPath()][] = $error->getMessage();
-            }
-            throw new DTOValidationException((string) json_encode($messages));
-        }
-
-        return $dto;
     }
 }
