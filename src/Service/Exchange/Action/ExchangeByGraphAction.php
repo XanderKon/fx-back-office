@@ -7,8 +7,6 @@ use Fhaculty\Graph\Set\Edges;
 
 class ExchangeByGraphAction
 {
-    private const PRECISION = 4;
-
     public function handle(float $amount, Edges $edges): float
     {
         /** @var Directed $edge */
@@ -16,6 +14,6 @@ class ExchangeByGraphAction
             $amount *= floatval($edge->getWeight());
         }
 
-        return round($amount, self::PRECISION);
+        return $amount;
     }
 }

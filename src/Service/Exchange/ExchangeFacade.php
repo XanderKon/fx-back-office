@@ -5,6 +5,7 @@ namespace App\Service\Exchange;
 use App\Service\Exchange\Action\ExchangeByGraphAction;
 use App\Service\Exchange\Action\GetDijkstraRouteAction;
 use App\Service\Exchange\Action\GetGraphAction;
+use Psr\Cache\InvalidArgumentException;
 
 class ExchangeFacade
 {
@@ -15,6 +16,9 @@ class ExchangeFacade
     ) {
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function handle(float $amount, string $from, string $to): float
     {
         $graph = $this->getGraphAction->handle();

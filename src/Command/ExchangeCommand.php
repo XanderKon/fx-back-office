@@ -77,10 +77,30 @@ class ExchangeCommand extends Command
         $this->stopwatch->stop(self::INTERNAL_NAME);
         $event = $this->stopwatch->getEvent(self::INTERNAL_NAME);
 
-        $io->success("$amount $from = $result $to");
+        $io->success(
+            rtrim(sprintf(
+                '%s %s = %s %s',
+                $amount,
+                $from,
+                $this->parseFloatToString($result),
+                $to
+            ), '0')
+        );
         $io->info("It took {$event->getDuration()} ms and {$event->getMemory()} bytes");
 
         return Command::SUCCESS;
+    }
+
+    private function parseFloatToString(float $number): string
+    {
+        if ($number <= 1.0e-5) {
+            return '0';
+        }
+
+        // Try to guess
+        $decimals = $number < 1e-3 ? 7 : 4;
+
+        return number_format($number, 0.00 !== fmod($number, 1) ? $decimals : 2);
     }
 
     private function floatValue(string $val): float
