@@ -28,6 +28,8 @@
         <PropertyNotSetInConstructor>
             <errorLevel type="suppress">
                 <referencedProperty name="App\Service\Import\Provider\Trait\HasHttpClient::$httpClient" />
+                <referencedProperty name="App\Service\Import\Provider\Trait\HasParserToDTO::$serializer" />
+                <referencedProperty name="App\Service\Import\Provider\Trait\HasParserToDTO::$validator" />
             </errorLevel>
         </PropertyNotSetInConstructor>
     </issueHandlers>

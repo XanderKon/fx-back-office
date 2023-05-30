@@ -45,7 +45,7 @@ class ImportRateCommand extends Command
     {
         $this->stopwatch->start(self::INTERNAL_NAME);
         $io = new SymfonyStyle($input, $output);
-        $arg1 = (array) $input->getArgument('arg1');
+        $arg1 = $input->getArgument('arg1');
 
         if ($arg1) {
             $io->note(sprintf('You passed an argument: %s', json_encode($arg1)));

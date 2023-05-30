@@ -50,7 +50,7 @@ class ExchangeCommand extends Command
     {
         $this->stopwatch->start(self::INTERNAL_NAME);
         $io = new SymfonyStyle($input, $output);
-        $amount = $this->floatValue((string) $input->getArgument('amount'));
+        $amount = $this->floatValue($input->getArgument('amount'));
 
         if (0.0 === $amount) {
             $io->error('There is something wrong with amount! 0 will always be 0. Let\'s try something else!');
@@ -58,8 +58,8 @@ class ExchangeCommand extends Command
             return Command::INVALID;
         }
 
-        $from = mb_strtoupper((string) $input->getArgument('from'));
-        $to = mb_strtoupper((string) $input->getArgument('to'));
+        $from = mb_strtoupper($input->getArgument('from'));
+        $to = mb_strtoupper($input->getArgument('to'));
 
         if (!$this->validateCurrencyForExistAction->handle($from, $to)) {
             $io->error(

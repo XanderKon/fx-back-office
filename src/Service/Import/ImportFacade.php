@@ -27,7 +27,7 @@ class ImportFacade
                 continue;
             }
 
-            // Find Service from DB by title
+            // Find Provider from DB by title
             $source = $this->sourceRepository->getByTitle($provider->getProviderName());
 
             if (empty($source)) {
