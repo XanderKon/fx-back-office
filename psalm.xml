@@ -27,7 +27,7 @@
         <!-- https://github.com/vimeo/psalm/issues/4241 For some reasons it doesn't work -->
         <PropertyNotSetInConstructor>
             <errorLevel type="suppress">
-                <referencedProperty name="App\Service\Import\Providers\Traits\HasHttpClient::$httpClient" />
+                <referencedProperty name="App\Service\Import\Provider\Trait\HasHttpClient::$httpClient" />
             </errorLevel>
         </PropertyNotSetInConstructor>
     </issueHandlers>

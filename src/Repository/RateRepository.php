@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Rate;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -51,5 +52,45 @@ class RateRepository extends ServiceEntityRepository
             'target' => $target,
             'source' => $source,
         ]);
+    }
+
+    /**
+     * @return array<int, array<string, string>>
+     */
+    public function findAllRateWithActiveSource(): array
+    {
+        return $this->createQueryBuilder('r')
+            ->select('r.base', 'r.target', 'r.rate', 's.title')
+            ->innerJoin('r.source', 's')
+            ->where('s.is_active = true')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public function findAllAvailableCurrencies(): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        try {
+            $query = $conn->prepare('
+                SELECT DISTINCT 
+                    currency
+                FROM 
+                    (SELECT unnest(array[rate.base, rate.target]) FROM rate) AS t(currency)
+                WHERE
+                    currency IS NOT NULL
+                ORDER BY 
+                    currency;'
+            );
+
+            return $query
+                ->executeQuery()
+                ->fetchFirstColumn();
+        } catch (Exception $e) {
+            return [];
+        }
     }
 }

@@ -39,8 +39,6 @@ class ImportRateCommand extends Command
 
         $this->importFacade->handle();
 
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
-
         return Command::SUCCESS;
     }
 }

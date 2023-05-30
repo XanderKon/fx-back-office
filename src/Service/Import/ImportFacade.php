@@ -40,8 +40,7 @@ class ImportFacade
             }
 
             // Get clear import data from Service
-            $importData = $provider->getData()
-                ->parseData();
+            $importData = $provider->getData()->parseData();
 
             // Save import data to DB
             $this->saveImportDataService->handle($importData, $source);
