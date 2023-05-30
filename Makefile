@@ -1,4 +1,4 @@
-.PHONY: build run down composer stan psalm phpcs lint
+.PHONY: build run down migrate composer stan psalm phpcs lint
 
 build:
 	cd docker/ && if [ ! -f .env ]; then cp .env.example .env; fi && docker compose build
@@ -8,6 +8,9 @@ run:
 
 down:
 	cd docker/ && docker compose down
+
+migrate:
+	cd docker/ && docker compose exec --user=www-data php-fpm bin/console doctrine:migrations:migrate --no-interaction
 
 composer:
 	cd docker/ && docker compose exec --user=www-data php-fpm composer install
