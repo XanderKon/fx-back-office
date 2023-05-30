@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Service\Import\Providers;
+namespace App\Service\Import\Provider;
 
 use App\Service\DTO\RatesDTO;
 use App\Service\Import\Exception\BadXMLResponseException;
 use App\Service\Import\Exception\DTOValidationException;
 use App\Service\Import\Exception\ParseResponseFromProviderException;
 use App\Service\Import\Exception\WrongStatusCodeFromProviderException;
-use App\Service\Import\Providers\Traits\HasHttpClient;
+use App\Service\Import\Provider\Trait\HasHttpClient;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 

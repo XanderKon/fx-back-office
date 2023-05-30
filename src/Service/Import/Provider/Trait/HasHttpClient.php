@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Import\Providers\Traits;
+namespace App\Service\Import\Provider\Trait;
 
 use App\Service\Import\Exception\ParseResponseFromProviderException;
 use App\Service\Import\Exception\WrongStatusCodeFromProviderException;

@@ -4,7 +4,7 @@ namespace App\Service\Import;
 
 use App\Repository\SourceRepository;
 use App\Service\Import\Exception\UndefinedImportProviderException;
-use App\Service\Import\Providers\ProviderInterface;
+use App\Service\Import\Provider\ProviderInterface;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 
 class ImportFacade

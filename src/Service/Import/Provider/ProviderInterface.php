@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Import\Providers;
+namespace App\Service\Import\Provider;
 
 use App\Service\DTO\RatesDTO;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
