@@ -16,7 +16,7 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 #[AsCommand(
     name: 'app:import-rate',
-    description: 'Console command for importing Rates from all or concrete Source if indicate',
+    description: 'Console command for importing Rates from all Providers',
 )]
 class ImportRateCommand extends Command
 {
