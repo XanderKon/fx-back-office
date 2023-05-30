@@ -12,6 +12,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 #[AsCommand(
     name: 'app:exchange',
@@ -19,9 +20,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class ExchangeCommand extends Command
 {
+    private const INTERNAL_NAME = 'exchange';
+
     public function __construct(
         protected ValidateCurrencyForExistAction $validateCurrencyForExistAction,
         protected ExchangeFacade $exchangeFacade,
+        protected Stopwatch $stopwatch,
         string $name = null
     ) {
         parent::__construct($name);
@@ -44,8 +48,9 @@ class ExchangeCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->stopwatch->start(self::INTERNAL_NAME);
         $io = new SymfonyStyle($input, $output);
-        $amount = $this->floatvalue($input->getArgument('amount'));
+        $amount = $this->floatValue((string) $input->getArgument('amount'));
 
         if (0.0 === $amount) {
             $io->error('There is something wrong with amount! 0 will always be 0. Let\'s try something else!');
@@ -53,8 +58,8 @@ class ExchangeCommand extends Command
             return Command::INVALID;
         }
 
-        $from = mb_strtoupper($input->getArgument('from'));
-        $to = mb_strtoupper($input->getArgument('to'));
+        $from = mb_strtoupper((string) $input->getArgument('from'));
+        $to = mb_strtoupper((string) $input->getArgument('to'));
 
         if (!$this->validateCurrencyForExistAction->handle($from, $to)) {
             $io->error(
@@ -69,13 +74,16 @@ class ExchangeCommand extends Command
         }
 
         $result = $this->exchangeFacade->handle(floatval($amount), $from, $to);
+        $this->stopwatch->stop(self::INTERNAL_NAME);
+        $event = $this->stopwatch->getEvent(self::INTERNAL_NAME);
 
         $io->success("$amount $from = $result $to");
+        $io->info("It took {$event->getDuration()} ms and {$event->getMemory()} bytes");
 
         return Command::SUCCESS;
     }
 
-    private function floatvalue(string $val): float
+    private function floatValue(string $val): float
     {
         $val = str_replace(',', '.', $val);
         $val = preg_replace('/\.(?=.*\.)/', '', $val);

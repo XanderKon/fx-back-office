@@ -2,21 +2,40 @@
 
 namespace App\Service\Exchange\Action;
 
+use App\Enum\RedisEnum;
 use App\Repository\RateRepository;
 use Fhaculty\Graph\Graph;
+use Psr\Cache\InvalidArgumentException;
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 class GetGraphAction
 {
-    public function __construct(private RateRepository $rateRepository)
-    {
+    public function __construct(
+        private readonly RateRepository $rateRepository,
+        protected TagAwareCacheInterface $cache
+    ) {
     }
 
+    /**
+     * @throws InvalidArgumentException
+     *
+     * @psalm-suppress ArgumentTypeCoercion
+     */
     public function handle(): Graph
     {
-        // TODO: try to get it from Redis
-        return $this->buildGraph();
+        return $this->cache->get(RedisEnum::GRAPH->value, function (ItemInterface $item) {
+            $item->tag(RedisEnum::TAG_INVALIDATE_BY_IMPORT->value);
+            // expires in 1 hour
+            $item->expiresAfter(3600);
+
+            return $this->buildGraph();
+        });
     }
 
+    /**
+     * @psalm-suppress InvalidArgument
+     */
     private function buildGraph(): Graph
     {
         $currencies = $this->rateRepository->findAllRateWithActiveSource();
@@ -25,14 +44,10 @@ class GetGraphAction
 
         foreach ($currencies as $currency) {
             /**
-             * @psalm-suppress InvalidArgument
-             *
              * @phpstan-ignore-next-line
              */
             $vertex1 = $graph->createVertex($currency['base'], true);
             /**
-             * @psalm-suppress InvalidArgument
-             *
              * @phpstan-ignore-next-line
              */
             $vertex2 = $graph->createVertex($currency['target'], true);

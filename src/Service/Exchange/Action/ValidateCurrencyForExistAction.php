@@ -2,7 +2,11 @@
 
 namespace App\Service\Exchange\Action;
 
+use App\Enum\RedisEnum;
 use App\Repository\RateRepository;
+use Psr\Cache\InvalidArgumentException;
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 class ValidateCurrencyForExistAction
 {
@@ -11,8 +15,9 @@ class ValidateCurrencyForExistAction
      */
     private array $currencies = [];
 
-    public function __construct(protected RateRepository $rateRepository)
-    {
+    public function __construct(
+        protected readonly RateRepository $rateRepository, protected TagAwareCacheInterface $cache
+    ) {
         $this->currencies = $this->getAvailableCurrencies();
     }
 
@@ -29,10 +34,19 @@ class ValidateCurrencyForExistAction
 
     /**
      * @return array<int, string>
+     *
+     * @throws InvalidArgumentException
+     *
+     * @psalm-suppress ArgumentTypeCoercion
      */
     private function getAvailableCurrencies(): array
     {
-        // TODO: put in to Redis and get from them
-        return $this->rateRepository->findAllAvailableCurrencies();
+        return $this->cache->get(RedisEnum::ALL_AVAILABLE_CURRENCIES->value, function (ItemInterface $item) {
+            $item->tag(RedisEnum::TAG_INVALIDATE_BY_IMPORT->value);
+            // expires in 1 hour
+            $item->expiresAfter(3600);
+
+            return $this->rateRepository->findAllAvailableCurrencies();
+        });
     }
 }
