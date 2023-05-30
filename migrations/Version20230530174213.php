@@ -27,6 +27,10 @@ final class Version20230530174213 extends AbstractMigration
         $this->addSql('CREATE TABLE source (id SERIAL NOT NULL, title VARCHAR(255) NOT NULL, is_active BOOLEAN NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
         $this->addSql('COMMENT ON COLUMN source.created_at IS \'(DC2Type:datetime_immutable)\'');
         $this->addSql('ALTER TABLE rate ADD CONSTRAINT FK_DFEC3F39953C1C61 FOREIGN KEY (source_id) REFERENCES source (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+
+        // Just for complete flow
+        $this->addSql('INSERT INTO source (title, is_active, created_at) VALUES (\'ecb\', true, NOW())');
+        $this->addSql('INSERT INTO source (title, is_active, created_at) VALUES (\'coindesk\', true, NOW())');
     }
 
     public function down(Schema $schema): void
