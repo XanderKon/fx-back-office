@@ -50,7 +50,10 @@ class ExchangeCommand extends Command
     {
         $this->stopwatch->start(self::INTERNAL_NAME);
         $io = new SymfonyStyle($input, $output);
+
         $amount = $this->floatValue($input->getArgument('amount'));
+        $from = mb_strtoupper($input->getArgument('from'));
+        $to = mb_strtoupper($input->getArgument('to'));
 
         if (0.0 === $amount) {
             $io->error('There is something wrong with amount! 0 will always be 0. Let\'s try something else!');
@@ -58,22 +61,13 @@ class ExchangeCommand extends Command
             return Command::INVALID;
         }
 
-        $from = mb_strtoupper($input->getArgument('from'));
-        $to = mb_strtoupper($input->getArgument('to'));
-
-        if (!$this->validateCurrencyForExistAction->handle($from, $to)) {
-            $io->error(
-                sprintf(
-                    'One or all currencies from your request [%s, %s] does not exist in our system. Sorry',
-                    $from,
-                    $to
-                )
-            );
+        try {
+            $result = $this->exchangeFacade->handle(floatval($amount), $from, $to);
+        } catch (\Throwable $throwable) {
+            $io->error($throwable->getMessage());
 
             return Command::INVALID;
         }
-
-        $result = $this->exchangeFacade->handle(floatval($amount), $from, $to);
         $this->stopwatch->stop(self::INTERNAL_NAME);
         $event = $this->stopwatch->getEvent(self::INTERNAL_NAME);
 
