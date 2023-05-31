@@ -32,6 +32,10 @@ class ExchangeFacade
         $from = mb_strtoupper($from);
         $to = mb_strtoupper($to);
 
+        if ($from === $to) {
+            return $this->createResponse($amount, $from, $to);
+        }
+
         if (!$this->validateCurrencyForExistAction->handle($from, $to)) {
             throw new InvalidParametersException(sprintf('One or all currencies from your request [%s, %s] does not exist in our system. Sorry', $from, $to));
         }
@@ -48,21 +52,24 @@ class ExchangeFacade
         return $this->createResponse($amount, $from, $to, $edges);
     }
 
-    private function createResponse(float $amount, string $from, string $to, Edges $edges): ExchangeResponse
+    private function createResponse(float $amount, string $from, string $to, Edges $edges = null): ExchangeResponse
     {
         $response = [
             'amount' => $amount,
             'from' => $from,
             'to' => $to,
+            'route' => [],
         ];
 
-        /** @var Directed $edge */
-        foreach ($edges as $edge) {
-            $response['route'][] = [
-                'from' => $edge->getVertexStart()->getId(),
-                'to' => $edge->getVertexEnd()->getId(),
-                'rate' => $edge->getWeight(),
-            ];
+        if ($edges) {
+            /** @var Directed $edge */
+            foreach ($edges as $edge) {
+                $response['route'][] = [
+                    'from' => $edge->getVertexStart()->getId(),
+                    'to' => $edge->getVertexEnd()->getId(),
+                    'rate' => $edge->getWeight(),
+                ];
+            }
         }
 
         return $this->serializer->deserialize((string) json_encode($response), ExchangeResponse::class, 'json');
