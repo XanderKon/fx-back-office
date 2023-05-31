@@ -30,6 +30,10 @@
                 <referencedProperty name="App\Service\Import\Provider\Trait\HasHttpClient::$httpClient" />
                 <referencedProperty name="App\Service\Import\Provider\Trait\HasParserToDTO::$serializer" />
                 <referencedProperty name="App\Service\Import\Provider\Trait\HasParserToDTO::$validator" />
+                <referencedProperty name="App\Service\Exchange\Response\ExchangeResponse::$route" />
+                <referencedProperty name="App\Service\Exchange\Response\ExchangeResponse::$to" />
+                <referencedProperty name="App\Service\Exchange\Response\ExchangeResponse::$from" />
+                <referencedProperty name="App\Service\Exchange\Response\ExchangeResponse::$amount" />
             </errorLevel>
         </PropertyNotSetInConstructor>
     </issueHandlers>
