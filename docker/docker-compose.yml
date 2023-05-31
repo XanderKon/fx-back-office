@@ -47,9 +47,6 @@ services:
         - TIMEZONE=${PHP_FPM_TZ}
         - COMPOSER_VERSION=${PHP_FPM_COMPOSER_VERSION}
         - INSTALL_XDEBUG=${PHP_FPM_INSTALL_XDEBUG}
-        - INSTALL_NODE=${PHP_FPM_INSTALL_NODE}
-        - NVM_DIR=${NVM_DIR}
-        - NODE_VERSION=${NODE_VERSION}
     container_name: ${CONTAINER_NAME}_php-fpm
     image: ${CONTAINER_NAME}_php-fpm
     volumes:
