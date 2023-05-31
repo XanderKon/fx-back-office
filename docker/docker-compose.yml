@@ -81,6 +81,7 @@ services:
       - ./.data/logs/nginx/:/var/log/nginx
     networks:
       - backend
+      - frontend
     restart: unless-stopped
   redis:
     platform: ${PLATFORM}
@@ -97,3 +98,12 @@ services:
     networks:
       - backend
     restart: unless-stopped
+  frontend:
+    platform: ${PLATFORM}
+    build:
+      context: ../frontend
+      dockerfile: ../docker/frontend/Dockerfile
+    container_name: ${CONTAINER_NAME}_frontend
+    image: ${CONTAINER_NAME}_frontend
+    networks:
+      - frontend
