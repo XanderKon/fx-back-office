@@ -76,7 +76,7 @@ class ExchangeCommand extends Command
                 '%s %s = %s %s',
                 $amount,
                 $from,
-                $this->parseFloatToString($result),
+                $this->parseFloatToString($result->getAmount()),
                 $to
             ), '0')
         );
