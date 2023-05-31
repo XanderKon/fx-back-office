@@ -3,7 +3,7 @@
 namespace App\Service\Exchange;
 
 use App\Service\Exchange\Action\ExchangeByGraphAction;
-use App\Service\Exchange\Action\GetDijkstraRouteAction;
+use App\Service\Exchange\Action\GetBFSRouteAction;
 use App\Service\Exchange\Action\GetGraphAction;
 use App\Service\Exchange\Action\ValidateCurrencyForExistAction;
 use App\Service\Exchange\Exception\InvalidParametersException;
@@ -17,7 +17,7 @@ class ExchangeFacade
 {
     public function __construct(
         private readonly GetGraphAction $getGraphAction,
-        private readonly GetDijkstraRouteAction $dijkstraRouteAction,
+        private readonly GetBFSRouteAction $BFSRouteAction,
         private readonly ExchangeByGraphAction $exchangeByGraphAction,
         private readonly ValidateCurrencyForExistAction $validateCurrencyForExistAction,
         private readonly SerializerInterface $serializer
@@ -45,7 +45,7 @@ class ExchangeFacade
         $vertexFrom = $graph->getVertex($from);
         $vertexTo = $graph->getVertex($to);
 
-        $edges = $this->dijkstraRouteAction->handle($vertexFrom, $vertexTo);
+        $edges = $this->BFSRouteAction->handle($vertexFrom, $vertexTo);
 
         $amount = $this->exchangeByGraphAction->handle($amount, $edges);
 
