@@ -1,10 +1,14 @@
-.PHONY: build run down migrate composer stan psalm phpcs lint test
+.PHONY: build run full-run down migrate composer stan psalm phpcs lint test
 
 build:
 	cd docker/ && if [ ! -f .env ]; then cp .env.example .env; fi && docker compose build
 
 run:
 	make build && cd docker/ && docker compose up
+
+full-run:
+	make build && cd docker/ && docker compose up -d && cd ../ && make composer && make migrate && \
+	cd docker/ && docker compose exec --user=www-data php-fpm bin/console app:import-rate
 
 down:
 	cd docker/ && docker compose down
