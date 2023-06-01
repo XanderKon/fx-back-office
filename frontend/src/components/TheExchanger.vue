@@ -42,7 +42,7 @@ watch(
     // Define where to write
     let whereToWrite = amountTo
     if ((newAmountTo !== oldAmountTo || newTo !== oldTo) && oldTo) {
-      whereToWrite.value = amountFrom.value
+      whereToWrite = amountFrom
     }
 
     fetch(`${import.meta.env.VITE_API_URL}/rate`, {
