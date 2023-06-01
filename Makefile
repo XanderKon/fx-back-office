@@ -1,4 +1,4 @@
-.PHONY: build run down migrate composer stan psalm phpcs lint
+.PHONY: build run down migrate composer stan psalm phpcs lint test
 
 build:
 	cd docker/ && if [ ! -f .env ]; then cp .env.example .env; fi && docker compose build
@@ -26,5 +26,8 @@ phpcs:
 
 lint:
 	clear && make stan && make psalm && make phpcs
+
+test:
+	cd docker/ && docker compose exec --user=www-data php-fpm php bin/phpunit
 
 .DEFAULT_GO := build
